@@ -44,24 +44,32 @@ import static org.mockito.Mockito.mock;
  */
 public class ExtractParametersBuilderTest {
 
-    @Test
+    @Test  //JUnit Test
     public void build(@TempDir Path folder) throws IOException {
-        var victim = new ExtractParametersBuilder();
-        victim.compress(true);
+        var victim = new ExtractParametersBuilder(); //victim is the test object
+
+        //enable main function
+        victim.compress(true); // enable compression (true) for the extracted PDF
         FileOrDirectoryTaskOutput output = mock(FileOrDirectoryTaskOutput.class);
-        victim.output(output);
+        victim.output(output); //use Mockito to create a mock object to simulate the output file
         victim.existingOutput(ExistingOutputPolicy.OVERWRITE);
-        victim.discardBookmarks(true);
-        victim.prefix("prefix");
-        victim.invertSelection(true);
-        victim.separateForEachRange(true);
+        victim.discardBookmarks(true); //enable the discarding of PDF bookmarks (true)
+        victim.prefix("prefix"); //set the prefix for the output files
+        victim.invertSelection(true); //enable inverted page selection
+        victim.separateForEachRange(true); //generate a separate output file for each range of pages
+
+        //create a temporary pdf
         PdfFileSource source = PdfFileSource.newInstanceNoPassword(Files.createTempFile(folder, null, ".pdf").toFile());
         victim.addSource(source);
         victim.addSource(PdfFileSource.newInstanceNoPassword(Files.createTempFile(folder, null, ".pdf").toFile()));
-        victim.version(PdfVersion.VERSION_1_7);
-        Set<PagesSelection> ranges = ConversionUtils.toPagesSelectionSet("2,5-20,33,45,last");
+
+        //set the pdf
+        victim.version(PdfVersion.VERSION_1_7);//set a version
+        Set<PagesSelection> ranges = ConversionUtils.toPagesSelectionSet("2,5-20,33,45,last");//select the page number
         victim.pagesSelection(ranges);
-        ExtractPagesParameters params = victim.build();
+        ExtractPagesParameters params = victim.build(); //build the extraction parameters
+
+        //validate the parameters
         assertTrue(params.isCompress());
         assertTrue(params.discardOutline());
         assertEquals(ExistingOutputPolicy.OVERWRITE, params.getExistingOutputPolicy());
@@ -74,5 +82,6 @@ public class ExtractParametersBuilderTest {
         assertEquals("prefix", params.getOutputPrefix());
         assertEquals(2, params.getSourceList().size());
         assertEquals(source, params.getSourceList().get(0));
+        System.out.println("Assertions passed. Test completed");
     }
 }
