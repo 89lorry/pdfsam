@@ -236,9 +236,9 @@
                                         <argument>--vendor</argument>
                                         <argument>"Sober Lemur S.r.l."</argument>
                                         <argument>--icon</argument>
-                                        <argument>"${basedir}/src/assembly/resources/pdfsam.ico"</argument>
+                                        <argument>"${basedir}/src/assembly/resources/pdfsam.iconset"</argument>
                                         <argument>--app-content</argument>
-                                        <argument>"./assembled/doc,./assembled/bin/pdfsam.bat,./assembled/LICENSE.txt,./assembled/splash.png"
+                                        <argument>"./assembled/doc,./assembled/bin/pdfsam.sh,./assembled/LICENSE.txt,./assembled/splash.png"
                                         </argument>
                                         <argument>--java-options</argument>
                                         <argument>"--enable-preview -Dprism.lcdtext=false -splash:$APPDIR\..\splash.png"</argument>
