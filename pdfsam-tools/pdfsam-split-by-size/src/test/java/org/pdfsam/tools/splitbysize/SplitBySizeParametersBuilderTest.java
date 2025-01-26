@@ -97,7 +97,22 @@ public class SplitBySizeParametersBuilderTest {
             victim.size(-1L); //-1MB
         });}
 
+    @Test
+    public void testSizeExceedsMaxLimit() {
+        SplitBySizeParametersBuilder victim = new SplitBySizeParametersBuilder();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            victim.size(Long.MAX_VALUE + 1); // size exceeds long’s maximum value throw an exception
+        });
+    }
 
+    @Test
+    public void testInvalidSizeInput() {
+        SplitBySizeParametersBuilder victim = new SplitBySizeParametersBuilder();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            victim.size(Long.parseLong("invalid"));
+        });
+    }
 }
+
 
 
