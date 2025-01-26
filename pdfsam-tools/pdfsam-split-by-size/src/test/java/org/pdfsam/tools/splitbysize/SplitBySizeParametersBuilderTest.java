@@ -25,6 +25,8 @@ import org.sejda.model.output.ExistingOutputPolicy;
 import org.sejda.model.output.FileOrDirectoryTaskOutput;
 import org.sejda.model.parameter.SplitBySizeParameters;
 import org.sejda.model.pdf.PdfVersion;
+import org.junit.jupiter.api.Assertions;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,7 +43,10 @@ public class SplitBySizeParametersBuilderTest {
 
     @Test
     public void build(@TempDir Path folder) throws IOException {
+        //a new victim
         SplitBySizeParametersBuilder victim = new SplitBySizeParametersBuilder();
+
+        //enable
         victim.compress(true);
         FileOrDirectoryTaskOutput output = mock(FileOrDirectoryTaskOutput.class);
         victim.output(output);
@@ -49,17 +54,50 @@ public class SplitBySizeParametersBuilderTest {
         victim.size(120L);
         victim.prefix("prefix");
         victim.discardBookmarks(true);
+
+        //create temp pdf
         PdfFileSource source = PdfFileSource.newInstanceNoPassword(Files.createTempFile(folder, null, ".pdf").toFile());
         victim.source(source);
         victim.version(PdfVersion.VERSION_1_7);
+
+        //build
         SplitBySizeParameters params = victim.build();
+
+        //assert
         assertTrue(params.isCompress());
         assertTrue(params.discardOutline());
         assertEquals(ExistingOutputPolicy.OVERWRITE, params.getExistingOutputPolicy());
         assertEquals(PdfVersion.VERSION_1_7, params.getVersion());
-        assertEquals(120L, params.getSizeToSplitAt());
+        assertEquals(120L, params.getSizeToSplitAt()); //120MB
         assertEquals("prefix", params.getOutputPrefix());
         assertEquals(output, params.getOutput());
         assertEquals(source, params.getSourceList().get(0));
     }
+
+    @Test
+    public void testSmallSize(@TempDir Path folder) {
+        SplitBySizeParametersBuilder victim = new SplitBySizeParametersBuilder();
+        victim.size(1L); // 1MB
+        SplitBySizeParameters params = victim.build();
+        assertEquals(1L, params.getSizeToSplitAt());
+    }
+
+    @Test
+    public void testZeroSize(@TempDir Path folder) {
+        SplitBySizeParametersBuilder victim = new SplitBySizeParametersBuilder();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            victim.size(0L); //0MB
+        });
+    }
+
+    @Test
+    public void testNegativeSize(@TempDir Path folder) {
+        SplitBySizeParametersBuilder victim = new SplitBySizeParametersBuilder();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            victim.size(-1L); //-1MB
+        });}
+
+
 }
+
+

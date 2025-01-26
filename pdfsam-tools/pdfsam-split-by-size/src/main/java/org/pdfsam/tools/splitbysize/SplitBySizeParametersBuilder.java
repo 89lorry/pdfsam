@@ -32,8 +32,12 @@ class SplitBySizeParametersBuilder extends SplitParametersBuilder<SplitBySizePar
     private long size;
 
     void size(long size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("Size must be greater than 0");
+        }
         this.size = size;
     }
+
 
     @Override
     public SplitBySizeParameters build() {
