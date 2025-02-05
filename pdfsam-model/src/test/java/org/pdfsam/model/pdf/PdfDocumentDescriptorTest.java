@@ -47,53 +47,59 @@ public class PdfDocumentDescriptorTest {
 
     @BeforeEach
     public void setUp() {
-        file = mock(File.class);
+        file = mock(File.class); //Creates mock file objects to simulate a real PDF file.
         when(file.getName()).thenReturn("myName");
         when(file.isFile()).thenReturn(true);
-        victim = PdfDocumentDescriptor.newDescriptor(file, "pwd");
-        victimNoPwd = PdfDocumentDescriptor.newDescriptorNoPassword(file);
+        victim = PdfDocumentDescriptor.newDescriptor(file, "pwd"); //A descriptor with a password
+        victimNoPwd = PdfDocumentDescriptor.newDescriptorNoPassword(file); //without password
     }
 
     @Test
     public void illegal() {
+        //handle the illegal argument
+        //Prevents creating a descriptor for a null file
         assertThrows(IllegalArgumentException.class, () -> PdfDocumentDescriptor.newDescriptorNoPassword(null));
     }
 
     @Test
     public void initialState() {
         assertTrue(victim.hasReferences());
-        assertEquals(PdfDescriptorLoadingStatus.INITIAL, victim.loadingStatus().getValue());
-        assertEquals("pwd", victim.getPassword());
+        assertEquals(PdfDescriptorLoadingStatus.INITIAL, victim.loadingStatus().getValue());    //Checks that the descriptor starts in the INITIAL state.
+        assertEquals("pwd", victim.getPassword());  //Confirms that the correct password and file name are stored.
         assertEquals("myName", victim.getFileName());
-        assertNull(victimNoPwd.getPassword());
+        assertNull(victimNoPwd.getPassword());  //Ensures that victimNoPwd correctly stores null for its password.
     }
 
     @Test
     public void invalidate() {
         victim.retain().retain();
-        assertTrue(victim.hasReferences());
+        assertTrue(victim.hasReferences());     //Simulates increasing and decreasing reference counts.
         victim.releaseAll();
-        assertFalse(victim.hasReferences());
+        assertFalse(victim.hasReferences());    //Ensures that calling releaseAll() removes all references and properly resets the state.
     }
 
     @Test
     public void retainAndRelease() {
         assertFalse(victim.retain().retain().release());
     }
+    //Calls retain() multiple times to increase the reference count.
+    //Calls release() and expects a false return value if references are still held
 
     @Test
     public void noVersionString() {
         assertEquals("", victim.getVersionString());
     }
+    //Ensures that, by default, the version string is empty.
 
     @Test
     public void getVersionString() {
-        victim.setVersion(PdfVersion.VERSION_1_5);
+        victim.setVersion(PdfVersion.VERSION_1_5); //Sets a PDF version (1.5) and ensures that the version string is no longer empty.
         assertFalse(isBlank(victim.getVersionString()));
     }
 
     @Test
     public void moveValidStatus() {
+        //State Transition Tests
         assertEquals(PdfDescriptorLoadingStatus.INITIAL, victim.loadingStatus().getValue());
         victim.moveStatusTo(PdfDescriptorLoadingStatus.REQUESTED);
         assertEquals(PdfDescriptorLoadingStatus.REQUESTED, victim.loadingStatus().getValue());
@@ -101,6 +107,7 @@ public class PdfDocumentDescriptorTest {
 
     @Test
     public void moveInvalidStatus() {
+        //Checks that skipping REQUESTED and moving directly to LOADING causes an IllegalStateException.
         assertEquals(PdfDescriptorLoadingStatus.INITIAL, victim.loadingStatus().getValue());
         assertThrows(IllegalStateException.class, () -> victim.moveStatusTo(PdfDescriptorLoadingStatus.LOADING));
     }
@@ -108,18 +115,22 @@ public class PdfDocumentDescriptorTest {
     @Test
     public void toPdfSource() {
         PdfFileSource source = victim.toPdfFileSource();
-        assertEquals(file, source.getSource());
-        assertEquals("pwd", source.getPassword());
+        assertEquals(file, source.getSource()); //Ensures that the descriptor correctly converts into a PdfFileSource.
+        assertEquals("pwd", source.getPassword()); //Checks that the file reference and password are correctly set.
     }
 
     @Test
     public void FailToPdfSource() {
+        //If the file is invalid, toPdfFileSource() should throw a ConversionException.
+        //Ensures that conversion does not proceed with bad input.
         when(file.isFile()).thenReturn(Boolean.FALSE);
         assertThrows(ConversionException.class, () -> victim.toPdfFileSource());
     }
 
     @Test
     public void informationDictionary() {
+        //Stores a key-value pair in the information dictionary.
+        //Ensures that getInformation("key") correctly retrieves the stored value
         HashMap<String, String> values = new HashMap<>();
         values.put("key", "value");
         victim.setInformationDictionary(values);
@@ -128,6 +139,7 @@ public class PdfDocumentDescriptorTest {
 
     @Test
     public void putInformation() {
+        //Ensures that calling putInformation() correctly updates the information dictionary.
         victim.putInformation("key", "value");
         assertEquals("value", victim.getInformation("key"));
     }
