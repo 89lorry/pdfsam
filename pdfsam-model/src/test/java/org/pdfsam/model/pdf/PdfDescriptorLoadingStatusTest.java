@@ -24,7 +24,7 @@ public class PdfDescriptorLoadingStatusTest {
         assertFalse(status.canMoveTo(PdfDescriptorLoadingStatus.INITIAL));
     }
 
-    // 测试 LOADING 状态的合法转换
+    //LOADING
     @Test
     public void testLoadingStateTransitions() {
         PdfDescriptorLoadingStatus status = PdfDescriptorLoadingStatus.LOADING;
