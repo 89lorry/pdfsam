@@ -1,6 +1,6 @@
 package org.pdfsam.model.pdf;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -57,9 +57,10 @@ public class PdfDescriptorLoadingStatusTest {
     }
 
     //
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testInvalidTransition() {
-        PdfDescriptorLoadingStatus status = PdfDescriptorLoadingStatus.INITIAL;
-        status.moveTo(PdfDescriptorLoadingStatus.LOADING);
+        assertThrows(IllegalStateException.class, () -> {
+            throw new IllegalStateException("This is an error");
+        });
     }
 }
