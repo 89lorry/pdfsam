@@ -13,7 +13,7 @@ import org.pdfsam.model.tool.ClearToolRequest;
 
 import static org.mockito.Mockito.*;
 
-public class ClearToolConfirmationDialogControllerTest1 {
+public class ClearToolConfirmationDialogTest1 {
 
     private ClearToolConfirmationDialogController controller;
     private Provider<ClearToolConfirmationDialog> mockDialogProvider;
