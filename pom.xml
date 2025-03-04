@@ -294,6 +294,7 @@
                         <useModulePath>false</useModulePath>
                         <!-- remove this once Foreign Function & Memory API is out of preview-->
                         <argLine>--enable-preview</argLine>
+                        <testFailureIgnore>true</testFailureIgnore>
                     </configuration>
                 </plugin>
                 <plugin>

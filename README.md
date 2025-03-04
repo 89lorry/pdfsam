@@ -41,3 +41,5 @@ A list of properties and arguments that can tweak PDFsam behavior can be found [
 
   [GNU Affero General Public License]: http://www.gnu.org/licenses/agpl-3.0.html
 
+------
+Test 2
