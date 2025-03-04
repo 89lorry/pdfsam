@@ -7,19 +7,11 @@ import org.mockito.MockedStatic;
 import org.pdfsam.core.context.ApplicationContext;
 import org.pdfsam.core.context.ApplicationPersistentSettings;
 import org.pdfsam.core.context.BooleanPersistentProperty;
+import org.pdfsam.eventstudio.DefaultEventStudio;
 import org.pdfsam.eventstudio.StaticStudio;
 import org.pdfsam.model.tool.ClearToolRequest;
-import org.pdfsam.eventstudio.EventStudio;
-import org.pdfsam.eventstudio.DefaultEventStudio;
-import org.pdfsam.gui.components.dialog.ClearToolConfirmationDialog;
-import org.pdfsam.gui.components.dialog.ClearToolConfirmationDialogController;
-
-import javafx.stage.Stage;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 import static org.mockito.Mockito.*;
-import static org.pdfsam.core.context.ApplicationContext.app;
 
 public class ClearToolConfirmationDialogControllerTest1 {
 
